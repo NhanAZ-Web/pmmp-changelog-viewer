@@ -28,9 +28,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Get full history for merging
-      
-      - name: Pull latest changes
-        run: git pull --rebase origin master
+          token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -72,33 +70,50 @@ jobs:
           # Create JSON object and save to versions.json
           echo "{\"versions\": $JSON_ARRAY}" | json -o json-4 > versions.json
           
+          # Count changelogs
+          TOTAL_CHANGELOGS=$(echo "$CHANGELOG_FILES" | wc -l)
+          
+          # Get newest and oldest versions
+          NEWEST_VERSION=$(echo "$CHANGELOG_FILES" | head -n 1 | sed 's/\.md$//')
+          OLDEST_VERSION=$(echo "$CHANGELOG_FILES" | tail -n 1 | sed 's/\.md$//')
+          
+          # Count by type
+          STABLE_COUNT=$(echo "$CHANGELOG_FILES" | grep -v -E "(alpha|beta)" | wc -l)
+          BETA_COUNT=$(echo "$CHANGELOG_FILES" | grep -E "beta" | wc -l)
+          ALPHA_COUNT=$(echo "$CHANGELOG_FILES" | grep -E "alpha" | wc -l)
+          
+          # Create summary.md
+          cat > summary.md << EOF
+# PocketMine-MP Changelogs Summary
+
+**Total Changelogs:** ${TOTAL_CHANGELOGS}
+
+## Version Range
+- **Newest:** ${NEWEST_VERSION}
+- **Oldest:** ${OLDEST_VERSION}
+
+## Version Types
+- **Stable:** ${STABLE_COUNT}
+- **Beta:** ${BETA_COUNT}
+- **Alpha:** ${ALPHA_COUNT}
+
+## All Versions (Newest to Oldest)
+$(echo "$CHANGELOG_FILES" | sed 's/\.md$//' | sed 's/^/- /')
+
+_Last updated: $(date -u +"%Y-%m-%dT%H:%M:%SZ")_
+EOF
+          
           # Report results
-          echo "Updated $(echo $CHANGELOG_FILES | wc -w) changelog files"
+          echo "Updated ${TOTAL_CHANGELOGS} changelog files"
           cd ..
           
-      - name: Check for changes
-        id: git-check
-        run: |
-          git add changelogs/
-          git status
-          git diff --staged --quiet || echo "changes=true" >> $GITHUB_OUTPUT
-          
-      - name: Configure Git
-        if: steps.git-check.outputs.changes == 'true'
+      - name: Commit and push if changed
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          
-      - name: Commit changes
-        if: steps.git-check.outputs.changes == 'true'
-        run: |
+          git pull --rebase origin master
           git add changelogs/
-          git commit -m "chore: Update changelogs"
-          
-      - name: Push changes
-        if: steps.git-check.outputs.changes == 'true'
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
-          force: false 
+          if ! git diff --quiet --staged; then
+            git commit -m "chore: Update changelogs"
+            git push origin master
+          fi 
