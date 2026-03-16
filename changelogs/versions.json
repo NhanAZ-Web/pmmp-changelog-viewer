@@ -1,5 +1,6 @@
 {
     "versions": [
+        "summary.md",
         "5.41.md",
         "5.40.md",
         "5.39.md",
