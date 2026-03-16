@@ -14,6 +14,12 @@ on:
       - master
     paths-ignore:
       - 'changelogs/**'  # Avoid infinite loop when workflow pushes changelog changes
+      - '.last-update'   # Avoid infinite loop when workflow pushes keep-alive changes
+
+# Prevent concurrent runs from conflicting with each other
+concurrency:
+  group: "update-changelogs"
+  cancel-in-progress: true
 
 # Permissions for this workflow
 permissions:
@@ -83,25 +89,23 @@ jobs:
           ALPHA_COUNT=$(echo "$CHANGELOG_FILES" | grep -E "alpha" | wc -l)
           
           # Create summary.md
-          cat > summary.md << EOF
-# PocketMine-MP Changelogs Summary
-
-**Total Changelogs:** ${TOTAL_CHANGELOGS}
-
-## Version Range
-- **Newest:** ${NEWEST_VERSION}
-- **Oldest:** ${OLDEST_VERSION}
-
-## Version Types
-- **Stable:** ${STABLE_COUNT}
-- **Beta:** ${BETA_COUNT}
-- **Alpha:** ${ALPHA_COUNT}
-
-## All Versions (Newest to Oldest)
-$(echo "$CHANGELOG_FILES" | sed 's/\.md$//' | sed 's/^/- /')
-
-_Last updated: $(date -u +"%Y-%m-%dT%H:%M:%SZ")_
-EOF
+          echo "# PocketMine-MP Changelogs Summary" > summary.md
+          echo "" >> summary.md
+          echo "**Total Changelogs:** ${TOTAL_CHANGELOGS}" >> summary.md
+          echo "" >> summary.md
+          echo "## Version Range" >> summary.md
+          echo "- **Newest:** ${NEWEST_VERSION}" >> summary.md
+          echo "- **Oldest:** ${OLDEST_VERSION}" >> summary.md
+          echo "" >> summary.md
+          echo "## Version Types" >> summary.md
+          echo "- **Stable:** ${STABLE_COUNT}" >> summary.md
+          echo "- **Beta:** ${BETA_COUNT}" >> summary.md
+          echo "- **Alpha:** ${ALPHA_COUNT}" >> summary.md
+          echo "" >> summary.md
+          echo "## All Versions (Newest to Oldest)" >> summary.md
+          echo "$CHANGELOG_FILES" | sed 's/\.md$//' | sed 's/^/- /' >> summary.md
+          echo "" >> summary.md
+          echo "_Last updated: $(date -u +"%Y-%m-%dT%H:%M:%SZ")_" >> summary.md
           
           # Report results
           echo "Updated ${TOTAL_CHANGELOGS} changelog files"
@@ -111,9 +115,25 @@ EOF
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git pull --rebase origin master
+          
+          # Pull latest changes, fallback to merge if rebase fails
+          git pull --rebase origin master || git pull --no-rebase origin master
+          
           git add changelogs/
           if ! git diff --quiet --staged; then
             git commit -m "chore: Update changelogs"
+            git push origin master
+          fi
+
+      # Keep-alive: update a timestamp file to prevent GitHub from
+      # disabling the scheduled workflow after 60 days of inactivity.
+      # This only runs on schedule events.
+      - name: Keep workflow alive
+        if: github.event_name == 'schedule'
+        run: |
+          date -u +"%Y-%m-%dT%H:%M:%SZ" > .last-update
+          git add .last-update
+          if ! git diff --quiet --staged; then
+            git commit -m "chore: Keep workflow alive [skip ci]"
             git push origin master
           fi 
