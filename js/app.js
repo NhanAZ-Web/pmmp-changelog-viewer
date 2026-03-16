@@ -41,11 +41,8 @@ const App = {
 		// Add browser history navigation handler
 		this.setupHistoryNavigation();
 
-		// Show welcome page when starting app (if no specific version or search is displayed)
-		const params = Utils.getUrlParams();
-		if (!params.version && !params.search) {
-			this.renderWelcomePage();
-		}
+		// Default behavior is now handled by processUrlParameters(), 
+		// which automatically loads the latest version if no params exist.
 
 		console.log('Application initialized');
 	},
@@ -144,16 +141,15 @@ const App = {
 			const highlightTerm = params.highlight || null;
 			Versions.loadVersion(params.version, false, highlightTerm);
 		} else {
-			// If no version is specified, check if we have a last viewed version
-			try {
-				const lastViewedVersion = Storage.getLastVersion();
-				// You could use lastViewedVersion here if needed
-			} catch (error) {
-				console.error('Error getting last version:', error);
+			// If no version is specified, default to the latest version explicitly
+			if (Versions.list && Versions.list.length > 0) {
+				const latestVersion = Versions.list[0];
+				console.log('No version specified, defaulting to latest:', latestVersion);
+				Versions.loadVersion(latestVersion, false);
+			} else {
+				// Fallback to welcome page if list is completely empty
+				this.renderWelcomePage();
 			}
-
-			// No need to load the welcome page or any default version
-			// Let the user choose from the version tree
 		}
 
 		// Process search parameter separately to ensure it works
