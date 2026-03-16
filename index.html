@@ -11,132 +11,63 @@
 	</head>
 	<body>
 		<div class="container">
-			<header class="d-flex justify-content-between align-items-center my-4">
-				<div class="d-flex align-items-center">
+			<header class="d-flex flex-wrap justify-content-between align-items-center my-4 gap-3">
+				<div class="d-flex align-items-center flex-grow-1 flex-md-grow-0">
 					<div class="d-flex gap-2 me-3">
 						<a href="./" class="btn btn-outline-primary" title="Home">
 							<i class="bi bi-house-door"></i>
 						</a>
 					</div>
-					<h1 class="mb-0">PocketMine-MP Changelog Viewer</h1>
+					<h1 class="mb-0 fs-3 text-nowrap d-none d-md-block">PocketMine-MP Changelog</h1>
+					<h1 class="mb-0 fs-4 text-nowrap d-block d-md-none">PMMP Changelog</h1>
 				</div>
+				
+				<!-- Main Search Bar in Header -->
+				<div class="d-flex flex-grow-1 justify-content-center px-md-4" style="max-width: 600px;">
+					<div class="input-group">
+						<input type="text" id="search-input" class="form-control" placeholder="Search changelogs..." aria-label="Search changelogs" />
+						<button class="btn btn-primary" id="search-button" type="button" title="Search">
+							<i class="bi bi-search"></i>
+						</button>
+						<button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#searchSettingsModal" title="Advanced Search Options">
+							<i class="bi bi-sliders"></i>
+						</button>
+					</div>
+				</div>
+
 				<div class="d-flex gap-2 align-items-center">
-					<a href="https://github.com/NhanAZ/pmmp-changelog-viewer" class="btn btn-outline-dark" title="GitHub Repository" target="_blank"> <i class="bi bi-github me-2"></i> GitHub Repository </a>
+					<a href="https://github.com/NhanAZ/pmmp-changelog-viewer" class="btn btn-outline-dark text-nowrap" title="GitHub Repository" target="_blank"> 
+						<i class="bi bi-github d-none d-sm-inline me-2"></i>
+						<i class="bi bi-github d-inline d-sm-none"></i>
+						<span class="d-none d-sm-inline">GitHub</span>
+					</a>
 				</div>
 			</header>
 
 			<div class="row">
 				<!-- Sidebar -->
-				<div class="col-md-4">
-					<!-- Search Card -->
-					<div class="card mb-4">
-						<div class="card-header d-flex justify-content-between align-items-center">
-							<h5 class="mb-0">Search</h5>
-							<button id="advanced-search-toggle" class="btn btn-sm btn-outline-secondary" type="button" title="Advanced Search" onclick="toggleAdvancedSearch()">
-								<i class="bi bi-sliders"></i>
-							</button>
-						</div>
-						<div class="card-body">
-							<!-- Simple Search -->
-							<div id="simple-search">
-								<div class="input-group mb-3">
-									<input type="text" id="search-input" class="form-control" placeholder="Enter search keywords..." />
-									<button class="btn btn-primary" id="search-button">Search</button>
-								</div>
-								<div class="mb-3">
-									<small class="text-muted">Tip: Use quotes for exact phrase matching (e.g. "API change")</small>
-								</div>
-							</div>
-
-							<!-- Advanced Search (Hidden by default) -->
-							<div id="advanced-search" class="d-none">
-								<div class="mb-3">
-									<div class="input-group">
-										<input type="text" id="advanced-search-input" class="form-control" placeholder="Advanced query..." />
-										<button class="btn btn-primary" id="advanced-search-button">Search</button>
-									</div>
-									<small class="text-muted">Use AND, OR, NOT to combine keywords</small>
-								</div>
-
-								<div class="mb-3">
-									<label class="form-label">Build query:</label>
-									<div id="query-builder">
-										<div class="query-term mb-2">
-											<div class="input-group input-group-sm">
-												<input type="text" class="form-control query-input" placeholder="Keyword..." />
-												<select class="form-select operator-select" style="max-width: 100px">
-													<option value="AND">AND</option>
-													<option value="OR">OR</option>
-													<option value="NOT">NOT</option>
-												</select>
-												<button class="btn btn-outline-secondary btn-add-term">
-													<i class="bi bi-plus"></i>
-												</button>
-											</div>
-										</div>
-									</div>
-									<div class="d-flex justify-content-between mt-2">
-										<button id="build-query" class="btn btn-sm btn-outline-primary">Build Query</button>
-										<button id="clear-query" class="btn btn-sm btn-outline-secondary">Clear</button>
-									</div>
-								</div>
-							</div>
-
-							<!-- Search Filters -->
-							<div id="search-filters" class="mb-3">
-								<div class="form-check mb-2">
-									<input class="form-check-input" type="checkbox" id="filter-heading-only" />
-									<label class="form-check-label" for="filter-heading-only"> <i class="bi bi-list-ul me-1"></i> Search in headings only </label>
-								</div>
-								<div class="form-check mb-2">
-									<input class="form-check-input" type="checkbox" id="filter-case-sensitive" />
-									<label class="form-check-label" for="filter-case-sensitive"> <i class="bi bi-type me-1"></i> Case sensitive </label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" id="search-current-version" />
-									<label class="form-check-label" for="search-current-version"> <i class="bi bi-pin-map me-1"></i> Search in current version only </label>
-									<div class="form-text small">When viewing a version, search will highlight matches instead of showing results page</div>
-								</div>
-							</div>
-
-							<!-- Version Filter -->
-							<div class="mb-3">
-								<label for="version-filter" class="form-label">Filter by version:</label>
-								<select id="version-filter" class="form-select">
-									<option value="all">All versions</option>
-									<option value="5">Version 5.x</option>
-									<option value="4">Version 4.x</option>
-									<option value="3">Version 3.x</option>
-									<option value="1">Version 1.x</option>
-								</select>
-							</div>
-
-							<!-- Search History -->
-							<div id="search-history" class="mb-3 d-none">
-								<label class="form-label">Search history:</label>
-								<div id="history-items" class="d-flex flex-wrap gap-1"></div>
-							</div>
-						</div>
-					</div>
-
+				<div class="col-lg-3 col-md-4 mb-4 mb-md-0">
 					<!-- Version List -->
-					<div class="card">
-						<div class="card-header d-flex justify-content-between align-items-center">
-							<h5 class="mb-0">Version List</h5>
+					<div class="card shadow-sm border-0 sticky-top" style="top: 20px; z-index: 100;">
+						<div class="card-header bg-white border-bottom-0 pt-3 pb-0 d-flex justify-content-between align-items-center">
+							<h5 class="mb-0 fw-bold">Versions</h5>
 							<div class="btn-group">
-								<button id="expand-all" class="btn btn-sm btn-outline-secondary" title="Expand All">
+								<button id="expand-all" class="btn btn-sm btn-light text-secondary" title="Expand All">
 									<i class="bi bi-arrows-expand"></i>
 								</button>
-								<button id="collapse-all" class="btn btn-sm btn-outline-secondary" title="Collapse All">
+								<button id="collapse-all" class="btn btn-sm btn-light text-secondary" title="Collapse All">
 									<i class="bi bi-arrows-collapse"></i>
 								</button>
 							</div>
 						</div>
 						<div class="card-body">
 							<div class="mb-3">
-								<input type="text" id="version-search" class="form-control form-control-sm" placeholder="Find version..." />
+								<div class="input-group input-group-sm">
+									<span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+									<input type="text" id="version-search" class="form-control bg-light border-start-0 ps-0" placeholder="Find version..." />
+								</div>
 							</div>
-							<div class="version-tree">
+							<div class="version-tree pe-1">
 								<div class="version-group">
 									<div class="version-group-header" data-group="5">Version 5.x</div>
 									<ul id="version-group-5" class="list-group version-sublist d-none"></ul>
@@ -159,10 +90,10 @@
 				</div>
 
 				<!-- Main Content -->
-				<div class="col-md-8">
-					<div class="card">
-						<div class="card-header d-flex justify-content-between align-items-center">
-							<h5 id="current-file" class="mb-0">Select a version or search</h5>
+				<div class="col-lg-9 col-md-8">
+					<div class="card shadow-sm border-0 h-100">
+						<div class="card-header bg-white border-bottom-0 pt-3 pb-0 d-flex justify-content-between align-items-center">
+							<h5 id="current-file" class="mb-0 fw-bold">Select a version or search</h5>
 							<div class="d-flex gap-2">
 								<span id="loading-indicator" class="badge bg-secondary d-none">Loading...</span>
 							</div>
@@ -182,38 +113,139 @@
 			</div>
 		</div>
 
+	<!-- Search Settings Modal -->
+		<div class="modal fade" id="searchSettingsModal" tabindex="-1" aria-labelledby="searchSettingsModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title fw-bold" id="searchSettingsModalLabel"><i class="bi bi-sliders me-2 text-primary"></i>Advanced Search Options</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-6 border-end-md">
+								<!-- Filters -->
+								<h6 class="fw-bold mb-3">Filters & Scope</h6>
+								<div id="search-filters" class="mb-4">
+									<div class="form-check form-switch mb-2">
+										<input class="form-check-input" type="checkbox" id="filter-heading-only" />
+										<label class="form-check-label" for="filter-heading-only">
+											<i class="bi bi-list-ul me-1 text-secondary"></i> Search in headings only
+										</label>
+									</div>
+									<div class="form-check form-switch mb-2">
+										<input class="form-check-input" type="checkbox" id="filter-case-sensitive" />
+										<label class="form-check-label" for="filter-case-sensitive">
+											<i class="bi bi-type me-1 text-secondary"></i> Case sensitive
+										</label>
+									</div>
+									<div class="form-check form-switch mb-3">
+										<input class="form-check-input" type="checkbox" id="search-current-version" />
+										<label class="form-check-label" for="search-current-version">
+											<i class="bi bi-pin-map me-1 text-secondary"></i> Search in current version only
+										</label>
+										<div class="form-text mt-1 text-muted small"><i class="bi bi-info-circle me-1"></i>When viewing a version, search will highlight matches instead of showing results page</div>
+									</div>
+								</div>
+
+								<!-- Version Filter -->
+								<div class="mb-4">
+									<label for="version-filter" class="form-label fw-bold">Filter by major version:</label>
+									<select id="version-filter" class="form-select bg-light">
+										<option value="all">All versions</option>
+										<option value="5">Version 5.x</option>
+										<option value="4">Version 4.x</option>
+										<option value="3">Version 3.x</option>
+										<option value="1">Version 1.x</option>
+									</select>
+								</div>
+								
+								<!-- Search History -->
+								<div id="search-history" class="mb-3 d-none">
+									<label class="form-label fw-bold">Recent searches:</label>
+									<div id="history-items" class="d-flex flex-wrap gap-2"></div>
+								</div>
+							</div>
+							
+							<div class="col-md-6 mt-4 mt-md-0 ps-md-4">
+								<h6 class="fw-bold mb-3">Advanced Query Builder</h6>
+								<!-- Advanced Search -->
+								<div id="advanced-search">
+									<div class="mb-3">
+										<div class="input-group">
+											<input type="text" id="advanced-search-input" class="form-control" placeholder="Advanced query string..." />
+											<button class="btn btn-primary" id="advanced-search-button" data-bs-dismiss="modal">Search</button>
+										</div>
+										<small class="text-muted d-block mt-1">Use AND, OR, NOT to combine multiple keywords. Tip: Use quotes for "exact phrase".</small>
+									</div>
+
+									<div class="card bg-light border-0">
+										<div class="card-body p-3">
+											<label class="form-label fw-semibold mb-2">Visual Query Builder:</label>
+											<div id="query-builder">
+												<div class="query-term mb-2">
+													<div class="input-group input-group-sm mb-2 shadow-sm rounded">
+														<input type="text" class="form-control query-input border-0" placeholder="Keyword..." />
+														<select class="form-select operator-select border-0 border-start" style="max-width: 90px; background-color: #e9ecef;">
+															<option value="AND">AND</option>
+															<option value="OR">OR</option>
+															<option value="NOT">NOT</option>
+														</select>
+														<button class="btn btn-light border-start btn-add-term">
+															<i class="bi bi-plus text-primary"></i>
+														</button>
+													</div>
+												</div>
+											</div>
+											<div class="d-flex justify-content-between mt-3">
+												<button id="build-query" class="btn btn-sm btn-outline-primary rounded-pill px-3">Sync to Input</button>
+												<button id="clear-query" class="btn btn-sm btn-link text-danger text-decoration-none">Clear All</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer bg-light">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<!-- Footer -->
-		<footer class="mt-5 py-4">
+		<footer class="mt-5 py-5 border-top bg-white">
 			<div class="container">
 				<div class="row">
-					<div class="col-lg-4 mb-3 mb-lg-0">
-						<h5 class="mb-3">PocketMine-MP Changelog Viewer</h5>
-						<p class="text-muted">A modern, responsive web application for viewing and searching PocketMine-MP changelogs.</p>
+					<div class="col-lg-4 mb-4 mb-lg-0">
+						<h5 class="mb-3 fw-bold">PocketMine-MP Changelog Viewer</h5>
+						<p class="text-muted">A modern, responsive web application for viewing and searching PocketMine-MP changelogs efficiently.</p>
 					</div>
-					<div class="col-lg-4 mb-3 mb-lg-0">
-						<h5 class="mb-3">Links</h5>
+					<div class="col-lg-4 mb-4 mb-lg-0">
+						<h5 class="mb-3 fw-bold">Links</h5>
 						<ul class="list-unstyled">
 							<li class="mb-2">
-								<a href="https://github.com/NhanAZ/pmmp-changelog-viewer" class="text-decoration-none" target="_blank" rel="noopener noreferrer"><i class="bi bi-github me-2"></i>GitHub Repository</a>
+								<a href="https://github.com/NhanAZ/pmmp-changelog-viewer" class="text-decoration-none text-body-secondary" target="_blank" rel="noopener noreferrer"><i class="bi bi-github me-2"></i>GitHub Repository</a>
 							</li>
 							<li class="mb-2">
-								<a href="https://github.com/pmmp/PocketMine-MP" class="text-decoration-none" target="_blank" rel="noopener noreferrer"><i class="bi bi-box me-2"></i>PocketMine-MP Project</a>
+								<a href="https://github.com/pmmp/PocketMine-MP" class="text-decoration-none text-body-secondary" target="_blank" rel="noopener noreferrer"><i class="bi bi-box me-2"></i>PocketMine-MP Project</a>
 							</li>
 							<li>
-								<a href="https://github.com/NhanAZ" class="text-decoration-none" target="_blank" rel="noopener noreferrer"><i class="bi bi-person me-2"></i>Developer</a>
+								<a href="https://github.com/NhanAZ" class="text-decoration-none text-body-secondary" target="_blank" rel="noopener noreferrer"><i class="bi bi-person me-2"></i>Developer</a>
 							</li>
 						</ul>
 					</div>
 					<div class="col-lg-4">
-						<h5 class="mb-3">About</h5>
+						<h5 class="mb-3 fw-bold">About</h5>
 						<p class="text-muted mb-2">A small contribution from Vietnam <span>🇻🇳</span> to make PocketMine-MP changelogs more accessible.</p>
 						<p class="text-muted mb-0">Powered by AI tools, including Claude by Anthropic.</p>
 					</div>
 				</div>
 
-				<hr class="my-4" />
+				<hr class="my-4 text-muted" />
 
-				<div class="row">
+				<div class="row text-muted small">
 					<div class="col-md-6">
 						<p class="mb-0">&copy; 2026 PocketMine-MP Changelog Viewer</p>
 					</div>
@@ -242,26 +274,8 @@
 		<script src="js/app.js"></script>
 
 		<script>
-			// Create toggle function immediately
-			window.toggleAdvancedSearch = function () {
-				console.log('Toggle function called directly');
-				const simpleSearch = document.getElementById('simple-search');
-				const advancedSearch = document.getElementById('advanced-search');
+			// Removed legacy global toggleAdvancedSearch 
 
-				if (simpleSearch) {
-					simpleSearch.classList.toggle('d-none');
-					console.log('Simple search is now:', simpleSearch.classList.contains('d-none') ? 'hidden' : 'visible');
-				} else {
-					console.error('Simple search element not found');
-				}
-
-				if (advancedSearch) {
-					advancedSearch.classList.toggle('d-none');
-					console.log('Advanced search is now:', advancedSearch.classList.contains('d-none') ? 'hidden' : 'visible');
-				} else {
-					console.error('Advanced search element not found');
-				}
-			};
 
 			// Initialize critical modules first
 			document.addEventListener('DOMContentLoaded', () => {

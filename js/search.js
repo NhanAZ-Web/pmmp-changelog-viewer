@@ -30,16 +30,7 @@ const Search = {
 			console.log('Search event listeners attached immediately');
 		}
 
-		// Add global function to toggle advanced search (can be called from console)
-		window.toggleAdvancedSearch = function () {
-			const simpleSearch = document.getElementById('simple-search');
-			const advancedSearch = document.getElementById('advanced-search');
-
-			if (simpleSearch) simpleSearch.classList.toggle('d-none');
-			if (advancedSearch) advancedSearch.classList.toggle('d-none');
-
-			console.log('Advanced search toggled manually');
-		};
+		// Removed global toggleAdvancedSearch as it's handled by Bootstrap
 	},
 
 	/**
@@ -50,7 +41,6 @@ const Search = {
 		document.getElementById('search-button')?.addEventListener('click', () => {
 			const term = document.getElementById('search-input')?.value?.trim();
 			if (term) {
-				// Removed auto-checking to respect user's choice
 				this.performSearch(term);
 			}
 		});
@@ -59,17 +49,27 @@ const Search = {
 			if (e.key === 'Enter') {
 				const term = e.target.value.trim();
 				if (term) {
-					// Removed auto-checking to respect user's choice
 					this.performSearch(term);
 				}
 			}
 		});
 
-		// Advanced search
+		// Advanced search / Settings Modal Search
 		document.getElementById('advanced-search-button')?.addEventListener('click', () => {
 			const term = document.getElementById('advanced-search-input')?.value?.trim();
 			if (term) {
+				// Update main search input
+				const mainSearchInput = document.getElementById('search-input');
+				if (mainSearchInput) mainSearchInput.value = term;
+				
 				this.performSearch(term);
+				
+				// Hide modal if using bootstrap
+				const modalEl = document.getElementById('searchSettingsModal');
+				if (modalEl) {
+					const modal = bootstrap.Modal.getInstance(modalEl);
+					if (modal) modal.hide();
+				}
 			}
 		});
 
@@ -77,33 +77,20 @@ const Search = {
 			if (e.key === 'Enter') {
 				const term = e.target.value.trim();
 				if (term) {
+					// Update main search input
+					const mainSearchInput = document.getElementById('search-input');
+					if (mainSearchInput) mainSearchInput.value = term;
+					
 					this.performSearch(term);
+					
+					// Hide modal if using bootstrap
+					const modalEl = document.getElementById('searchSettingsModal');
+					if (modalEl) {
+						const modal = bootstrap.Modal.getInstance(modalEl);
+						if (modal) modal.hide();
+					}
 				}
 			}
-		});
-
-		// Advanced search toggle
-		document.getElementById('advanced-search-toggle')?.addEventListener('click', function () {
-			console.log('Advanced search toggle clicked');
-
-			const simpleSearch = document.getElementById('simple-search');
-			const advancedSearch = document.getElementById('advanced-search');
-			const searchFilters = document.getElementById('search-filters');
-
-			if (simpleSearch) {
-				simpleSearch.classList.toggle('d-none');
-				console.log('Toggled simple search:', simpleSearch.classList.contains('d-none') ? 'hidden' : 'visible');
-			}
-
-			if (advancedSearch) {
-				advancedSearch.classList.toggle('d-none');
-				console.log('Toggled advanced search:', advancedSearch.classList.contains('d-none') ? 'hidden' : 'visible');
-			}
-
-			// Remove this toggle since search filters should always be visible
-			// if (searchFilters) {
-			//     searchFilters.classList.toggle('d-none');
-			// }
 		});
 
 		// Query builder

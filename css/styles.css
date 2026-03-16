@@ -72,7 +72,7 @@ body {
 
 /* Version tree */
 .version-tree {
-	max-height: 400px;
+	height: calc(100vh - 180px); /* Fill available vertical space */
 	overflow-y: auto;
 	padding-right: 5px;
 }
@@ -168,7 +168,7 @@ body {
 
 /* Content display */
 #content-display {
-	min-height: 200px;
+	min-height: calc(100vh - 200px);
 	opacity: 1;
 	transition: opacity 0.3s;
 	padding: 0.5rem;
