@@ -21,9 +21,9 @@
 					<h1 class="mb-0 fs-3 text-nowrap d-none d-md-block">PocketMine-MP Changelog</h1>
 					<h1 class="mb-0 fs-4 text-nowrap d-block d-md-none">PMMP Changelog</h1>
 				</div>
-				
+
 				<!-- Main Search Bar in Header -->
-				<div class="d-flex flex-grow-1 justify-content-center px-md-4" style="max-width: 600px;">
+				<div class="d-flex flex-grow-1 justify-content-center px-md-4" style="max-width: 600px">
 					<div class="input-group">
 						<input type="text" id="search-input" class="form-control" placeholder="Search changelogs..." aria-label="Search changelogs" />
 						<button class="btn btn-primary" id="search-button" type="button" title="Search">
@@ -36,7 +36,7 @@
 				</div>
 
 				<div class="d-flex gap-2 align-items-center">
-					<a href="https://github.com/NhanAZ/pmmp-changelog-viewer" class="btn btn-outline-dark text-nowrap" title="GitHub Repository" target="_blank"> 
+					<a href="https://github.com/NhanAZ/pmmp-changelog-viewer" class="btn btn-outline-dark text-nowrap" title="GitHub Repository" target="_blank">
 						<i class="bi bi-github d-none d-sm-inline me-2"></i>
 						<i class="bi bi-github d-inline d-sm-none"></i>
 						<span class="d-none d-sm-inline">GitHub</span>
@@ -48,7 +48,7 @@
 				<!-- Sidebar -->
 				<div class="col-lg-3 col-md-4 mb-4 mb-md-0">
 					<!-- Version List -->
-					<div class="card shadow-sm border-0 sticky-top" style="top: 20px; z-index: 100;">
+					<div class="card shadow-sm border-0 sticky-top" style="top: 20px; z-index: 100">
 						<div class="card-header bg-white border-bottom-0 pt-3 pb-0 d-flex justify-content-between align-items-center">
 							<h5 class="mb-0 fw-bold">Versions</h5>
 							<div class="btn-group">
@@ -113,7 +113,7 @@
 			</div>
 		</div>
 
-	<!-- Search Settings Modal -->
+		<!-- Search Settings Modal -->
 		<div class="modal fade" id="searchSettingsModal" tabindex="-1" aria-labelledby="searchSettingsModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered modal-lg">
 				<div class="modal-content">
@@ -129,21 +129,15 @@
 								<div id="search-filters" class="mb-4">
 									<div class="form-check form-switch mb-2">
 										<input class="form-check-input" type="checkbox" id="filter-heading-only" />
-										<label class="form-check-label" for="filter-heading-only">
-											<i class="bi bi-list-ul me-1 text-secondary"></i> Search in headings only
-										</label>
+										<label class="form-check-label" for="filter-heading-only"> <i class="bi bi-list-ul me-1 text-secondary"></i> Search in headings only </label>
 									</div>
 									<div class="form-check form-switch mb-2">
 										<input class="form-check-input" type="checkbox" id="filter-case-sensitive" />
-										<label class="form-check-label" for="filter-case-sensitive">
-											<i class="bi bi-type me-1 text-secondary"></i> Case sensitive
-										</label>
+										<label class="form-check-label" for="filter-case-sensitive"> <i class="bi bi-type me-1 text-secondary"></i> Case sensitive </label>
 									</div>
 									<div class="form-check form-switch mb-3">
 										<input class="form-check-input" type="checkbox" id="search-current-version" />
-										<label class="form-check-label" for="search-current-version">
-											<i class="bi bi-pin-map me-1 text-secondary"></i> Search in current version only
-										</label>
+										<label class="form-check-label" for="search-current-version"> <i class="bi bi-pin-map me-1 text-secondary"></i> Search in current version only </label>
 										<div class="form-text mt-1 text-muted small"><i class="bi bi-info-circle me-1"></i>When viewing a version, search will highlight matches instead of showing results page</div>
 									</div>
 								</div>
@@ -159,14 +153,14 @@
 										<option value="1">Version 1.x</option>
 									</select>
 								</div>
-								
+
 								<!-- Search History -->
 								<div id="search-history" class="mb-3 d-none">
 									<label class="form-label fw-bold">Recent searches:</label>
 									<div id="history-items" class="d-flex flex-wrap gap-2"></div>
 								</div>
 							</div>
-							
+
 							<div class="col-md-6 mt-4 mt-md-0 ps-md-4">
 								<h6 class="fw-bold mb-3">Advanced Query Builder</h6>
 								<!-- Advanced Search -->
@@ -186,7 +180,7 @@
 												<div class="query-term mb-2">
 													<div class="input-group input-group-sm mb-2 shadow-sm rounded">
 														<input type="text" class="form-control query-input border-0" placeholder="Keyword..." />
-														<select class="form-select operator-select border-0 border-start" style="max-width: 90px; background-color: #e9ecef;">
+														<select class="form-select operator-select border-0 border-start" style="max-width: 90px; background-color: #e9ecef">
 															<option value="AND">AND</option>
 															<option value="OR">OR</option>
 															<option value="NOT">NOT</option>
@@ -274,8 +268,7 @@
 		<script src="js/app.js"></script>
 
 		<script>
-			// Removed legacy global toggleAdvancedSearch 
-
+			// Removed legacy global toggleAdvancedSearch
 
 			// Initialize critical modules first
 			document.addEventListener('DOMContentLoaded', () => {
