@@ -41,7 +41,7 @@ const App = {
 		// Add browser history navigation handler
 		this.setupHistoryNavigation();
 
-		// Default behavior is now handled by processUrlParameters(), 
+		// Default behavior is now handled by processUrlParameters(),
 		// which automatically loads the latest version if no params exist.
 
 		console.log('Application initialized');

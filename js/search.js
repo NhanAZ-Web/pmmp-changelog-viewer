@@ -61,9 +61,9 @@ const Search = {
 				// Update main search input
 				const mainSearchInput = document.getElementById('search-input');
 				if (mainSearchInput) mainSearchInput.value = term;
-				
+
 				this.performSearch(term);
-				
+
 				// Hide modal if using bootstrap
 				const modalEl = document.getElementById('searchSettingsModal');
 				if (modalEl) {
@@ -80,9 +80,9 @@ const Search = {
 					// Update main search input
 					const mainSearchInput = document.getElementById('search-input');
 					if (mainSearchInput) mainSearchInput.value = term;
-					
+
 					this.performSearch(term);
-					
+
 					// Hide modal if using bootstrap
 					const modalEl = document.getElementById('searchSettingsModal');
 					if (modalEl) {
