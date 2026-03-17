@@ -33,13 +33,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.head_ref || github.ref }}
           fetch-depth: 0  # Get full history for merging
           token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
+          cache: 'npm'
           
       - name: Install dependencies
         run: npm install -g json
@@ -117,12 +119,12 @@ jobs:
           git config --local user.name "github-actions[bot]"
           
           # Pull latest changes, fallback to merge if rebase fails
-          git pull --rebase origin master || git pull --no-rebase origin master
+          git pull --rebase origin ${{ github.ref_name }} || git pull --no-rebase origin ${{ github.ref_name }}
           
           git add changelogs/
           if ! git diff --quiet --staged; then
             git commit -m "chore: Update changelogs"
-            git push origin master
+            git push origin ${{ github.ref_name }}
           fi
 
       # Keep-alive: update a timestamp file to prevent GitHub from
@@ -135,5 +137,5 @@ jobs:
           git add .last-update
           if ! git diff --quiet --staged; then
             git commit -m "chore: Keep workflow alive [skip ci]"
-            git push origin master
-          fi 
+            git push origin ${{ github.ref_name }}
+          fi

@@ -25,16 +25,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.head_ref || github.ref }}
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
 
-      - name: Install Prettier
-        run: npm install --save-dev prettier
+      - name: Install dependencies
+        run: npm ci
 
       - name: Create Prettier config
         run: |
@@ -69,16 +70,10 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
-      - name: Commit changes
+      - name: Commit and push changes
         if: steps.git-check.outputs.changes == 'true' && github.event_name != 'pull_request'
         run: |
+          git pull --rebase origin ${{ github.ref_name }} || git pull --no-rebase origin ${{ github.ref_name }}
           git add -A
           git commit -m "style: Format code with Prettier"
-
-      - name: Push changes
-        if: steps.git-check.outputs.changes == 'true' && github.event_name != 'pull_request'
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
-          force: false 
+          git push origin ${{ github.ref_name }} 

@@ -23,10 +23,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Get full history for merging
-      
-      - name: Pull latest changes
-        run: git pull --rebase origin master
+          ref: ${{ github.head_ref || github.ref }}
+          fetch-depth: 0
       
       - name: Fix Home button URL
         run: |
@@ -50,16 +48,10 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-      - name: Commit changes
+      - name: Commit and push changes
         if: steps.git-check.outputs.changes == 'true'
         run: |
+          git pull --rebase origin ${{ github.ref_name }} || git pull --no-rebase origin ${{ github.ref_name }}
           git add index.html
           git commit -m "fix: Update home button URL for GitHub Pages"
-          
-      - name: Push changes
-        if: steps.git-check.outputs.changes == 'true'
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
-          force: false 
+          git push origin ${{ github.ref_name }} 
