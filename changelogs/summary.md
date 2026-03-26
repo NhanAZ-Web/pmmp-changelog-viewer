@@ -1,18 +1,19 @@
 # PocketMine-MP Changelogs Summary
 
-**Total Changelogs:** 112
+**Total Changelogs:** 113
 
 ## Version Range
 - **Newest:** summary
 - **Oldest:** 1.3
 
 ## Version Types
-- **Stable:** 101
+- **Stable:** 102
 - **Beta:** 8
 - **Alpha:** 3
 
 ## All Versions (Newest to Oldest)
 - summary
+- 5.42
 - 5.41
 - 5.40
 - 5.39
@@ -125,4 +126,4 @@
 - 1.4
 - 1.3
 
-_Last updated: 2026-03-25T02:24:37Z_
+_Last updated: 2026-03-26T02:31:08Z_
